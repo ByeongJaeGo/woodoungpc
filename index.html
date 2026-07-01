@@ -30,6 +30,8 @@
     "inLanguage": "ko-KR"
   }
   </script>
+  <script src="analytics-config.js"></script>
+  <script src="analytics.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -726,6 +728,13 @@
         const card = document.querySelector(`.pc-card[data-id="${id}"]`);
         if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
+
+      if (typeof window.wdpcTrack === 'function') {
+        window.wdpcTrack('select_pc_bang', {
+          pc_id: pc.id,
+          pc_name: pc.name,
+        });
+      }
     }
 
     function renderPcList(filter = '') {
@@ -770,6 +779,9 @@
           const expanded = more.hasAttribute('hidden');
           more.toggleAttribute('hidden');
           pricingToggle.textContent = expanded ? '접기' : '더보기';
+          if (typeof window.wdpcTrack === 'function') {
+            window.wdpcTrack('pricing_toggle', { action: expanded ? 'expand' : 'collapse' });
+          }
         } else if (mapBtn) {
           e.stopPropagation();
           selectPcBang(Number(mapBtn.dataset.id));
