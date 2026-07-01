@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>천안 신불당동 PC방 요금·위치 정보 | woodoungpc</title>
+  <meta name="description" content="천안 신불당·불당동 PC방 8곳 위치와 참고 요금을 한눈에 확인하세요. 욜로PC방, KIND PC, 레드포스, 제닉스아레나, 알파PC카페, 샹떼, 플래티넘, 아이센스리그PC. 요금은 변동될 수 있습니다.">
+  <meta name="keywords" content="천안 PC방, 신불당동 PC방, 불당동 PC방, 천안 PC방 요금, 신불당 PC방 위치, 불당 PC방 지도, woodoungpc">
+  <meta name="author" content="woodoungpc">
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
+  <link rel="canonical" href="https://woodoungpc.vercel.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:site_name" content="woodoungpc">
+  <meta property="og:title" content="천안 신불당동 PC방 요금·위치 정보">
+  <meta property="og:description" content="신불당·불당동 PC방 8곳 위치 지도와 참고 요금. 매장·회원·이벤트에 따라 요금은 변동될 수 있습니다.">
+  <meta property="og:url" content="https://woodoungpc.vercel.app/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="천안 신불당동 PC방 요금·위치 정보">
+  <meta name="twitter:description" content="신불당·불당동 PC방 위치와 참고 요금을 한 페이지에서 확인하세요.">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "woodoungpc",
+    "url": "https://woodoungpc.vercel.app/",
+    "description": "천안 신불당·불당동 PC방 위치와 참고 요금 정보",
+    "inLanguage": "ko-KR"
+  }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface-hover: #222633;
+      --border: #2a2f3d;
+      --accent: #6c5ce7;
+      --accent-light: #a29bfe;
+      --text: #e8eaed;
+      --text-muted: #8b92a5;
+      --success: #00b894;
+      --danger: #ff6b6b;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .logo-text { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+    .logo-text span { color: var(--accent-light); }
+
+    .btn {
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent-light); }
+    .btn-sm { padding: 5px 12px; font-size: 12px; }
+
+    .hero {
+      text-align: center;
+      padding: 48px 24px 32px;
+    }
+
+    .hero h1 { font-size: 32px; font-weight: 700; margin-bottom: 12px; }
+    .hero p { color: var(--text-muted); font-size: 16px; }
+    .hero .badge {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 6px 16px;
+      background: rgba(108, 92, 231, 0.15);
+      color: var(--accent-light);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+    }
+
+    .map-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .map-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .map-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .map-panel-header h2 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .map-panel-header span {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    #map {
+      height: 520px;
+      width: 100%;
+      background: #1e2130;
+    }
+
+    .list-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      max-height: 580px;
+    }
+
+    .list-panel-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .list-panel-header h2 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 9px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .search-box input:focus { border-color: var(--accent); }
+
+    .pc-list {
+      overflow-y: auto;
+      padding: 12px;
+      flex: 1;
+    }
+
+    .pc-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .pc-card:last-child { margin-bottom: 0; }
+
+    .pc-card:hover,
+    .pc-card.active {
+      border-color: var(--accent);
+      background: rgba(108, 92, 231, 0.08);
+    }
+
+    .pc-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .pc-card .number {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      background: rgba(108, 92, 231, 0.2);
+      color: var(--accent-light);
+      border-radius: 7px;
+      text-align: center;
+      line-height: 26px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .pc-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .pc-card .location {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      padding-left: 36px;
+    }
+
+    .pc-card-pricing {
+      padding-left: 36px;
+      margin-bottom: 10px;
+    }
+
+    .pc-card-pricing .pricing-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-light);
+      margin-bottom: 4px;
+    }
+
+    .pc-card-pricing ul {
+      list-style: none;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .pc-card-pricing li {
+      padding: 2px 0;
+    }
+
+    .pc-card-pricing .price {
+      font-weight: 600;
+      color: var(--accent-light);
+    }
+
+    .pc-card-pricing .pricing-note {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .pc-card-pricing .pricing-more-items[hidden] {
+      display: none;
+    }
+
+    .pc-card-pricing .pricing-more-btn {
+      margin-top: 4px;
+      padding: 0;
+      background: none;
+      border: none;
+      color: var(--accent-light);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .pc-card-pricing .pricing-more-btn:hover {
+      color: var(--accent);
+    }
+
+    .pc-card-actions {
+      display: flex;
+      gap: 8px;
+      padding-left: 36px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Leaflet overrides */
+    .leaflet-popup-content-wrapper {
+      border-radius: 10px;
+      font-family: inherit;
+    }
+
+    .popup-content h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #1a1d27;
+    }
+
+    .popup-content p {
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 6px;
+    }
+
+    .popup-content .popup-pricing {
+      font-size: 12px;
+      color: #333;
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .popup-content .popup-pricing strong {
+      color: #6c5ce7;
+    }
+
+    .popup-content a {
+      display: inline-block;
+      font-size: 12px;
+      color: #6c5ce7;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .custom-marker {
+      background: var(--accent);
+      color: #fff;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    }
+
+    .custom-marker.active {
+      background: #ff6b6b;
+      transform: scale(1.15);
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+    }
+
+    .seo-section {
+      max-width: 1200px;
+      margin: 0 auto 32px;
+      padding: 0 24px;
+    }
+
+    .seo-section h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .seo-section p,
+    .seo-section li {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .seo-section ul {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .seo-section li strong {
+      color: var(--text);
+    }
+
+    @media (max-width: 900px) {
+      .map-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .list-panel {
+        max-height: none;
+      }
+
+      #map {
+        height: 360px;
+      }
+
+      header {
+        padding: 12px 16px;
+      }
+
+      .hero h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="#" class="logo">
+      <div class="logo-icon">W</div>
+      <div class="logo-text">woodoung<span>pc</span></div>
+    </a>
+  </header>
+
+  <section class="hero">
+    <h1>천안 신불당동 PC방 요금 정보</h1>
+    <p>네이버 지도 등록 매장의 위치를 확인하고 PC방 정보를 비교하세요</p>
+    <p style="color:var(--text-muted);font-size:13px;margin-top:8px;">표시된 요금은 참고용이며, 매장·회원·이벤트에 따라 변동될 수 있습니다.</p>
+    <div class="badge">📍 충청남도 천안시 서북구 신불당동 · 네이버 지도 PC방 8곳</div>
+  </section>
+
+  <main>
+    <div class="map-layout">
+      <div class="map-panel">
+        <div class="map-panel-header">
+          <h2>🗺️ PC방 위치 지도</h2>
+          <span id="mapHint">네이버 지도 기준 · 마커 클릭</span>
+        </div>
+        <div id="map"></div>
+      </div>
+
+      <div class="list-panel">
+        <div class="list-panel-header">
+          <h2>신불당동 PC방 목록</h2>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">네이버 지도에 등록된 매장만 표시합니다.</p>
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="PC방 이름 검색...">
+          </div>
+        </div>
+        <div class="pc-list" id="pcList"></div>
+      </div>
+    </div>
+  </main>
+
+  <section class="seo-section" aria-label="신불당동 PC방 안내">
+    <h2>천안 신불당·불당동 PC방 안내</h2>
+    <p>
+      woodoungpc는 충청남도 천안시 서북구 신불당·불당동 일대 네이버 지도 등록 PC방의 위치와 참고 요금을 제공합니다.
+      표시 요금(40분 1,000원부터)은 참고용이며, 매장·회원·이벤트·시간대에 따라 변동될 수 있으니 방문 전 매장 또는 네이버 지도에서 확인하세요.
+    </p>
+    <ul>
+      <li><strong>욜로PC방 천안불당점</strong> — 충남 천안시 서북구 불당26로 100-20 4층</li>
+      <li><strong>KIND PC</strong> — 충남 천안시 서북구 불당21로 67-21 엘림프라자 6층</li>
+      <li><strong>레드포스PC아레나 천안불당점</strong> — 충남 천안시 서북구 불당33길 19 4층</li>
+      <li><strong>제닉스아레나PC방</strong> — 충남 천안시 서북구 검은들1길 9</li>
+      <li><strong>알파PC카페</strong> — 충남 천안시 서북구 검은들3길 57 201~202호</li>
+      <li><strong>샹떼PC방 천안불당점</strong> — 충남 천안시 서북구 불당34길 2 202호</li>
+      <li><strong>플래티넘PC방</strong> — 충남 천안시 서북구 불당23로 73-27 2층</li>
+      <li><strong>아이센스리그PC 신불당점</strong> — 충남 천안시 서북구 불당25로 152 디엠타워 2층 204호</li>
+    </ul>
+  </section>
+
+  <footer>
+    &copy; 2026 woodoungpc. All rights reserved.
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // 네이버 지도(플레이스)에 등록된 신불당동 PC방만 포함
+    const PRICING_VISIBLE_MAX = 3000;
+
+    function formatDuration(minutes) {
+      const hours = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      if (hours === 0) return `${mins}분`;
+      if (mins === 0) return `${hours}시간`;
+      return `${hours}시간 ${mins}분`;
+    }
+
+    function buildStandardPricing() {
+      const packages = [];
+      for (let price = 1000, minutes = 40; price <= 10000; price += 1000, minutes += 40) {
+        packages.push({ label: formatDuration(minutes), price, minutes });
+      }
+      return { packages, verifiedAt: '2026-07-01' };
+    }
+
+    const DEFAULT_PRICING = buildStandardPricing();
+
+    const PC_BANGS = [
+      {
+        id: 1,
+        name: '욜로PC방 천안불당점',
+        address: '불당26로 100-20 4층',
+        fullAddress: '충남 천안시 서북구 불당26로 100-20 4층',
+        lat: 36.816617,
+        lng: 127.10783,
+        naverPlaceId: '1028282070',
+        pricing: DEFAULT_PRICING,
+      },
+      {
+        id: 2,
+        name: 'KIND PC',
+        address: '불당21로 67-21 엘림프라자 6층',
+        fullAddress: '충남 천안시 서북구 불당21로 67-21 엘림프라자 6층',
+        lat: 36.8145742,
+        lng: 127.1079942,
+        naverPlaceId: '1238579527',
+        pricing: DEFAULT_PRICING,
+      },
+      {
+        id: 3,
+        name: '레드포스PC아레나 천안불당점',
+        address: '불당33길 19 4층',
+        fullAddress: '충남 천안시 서북구 불당33길 19 4층',
+        lat: 36.8120748,
+        lng: 127.1077188,
+        naverPlaceId: '1699598158',
+        pricing: DEFAULT_PRICING,
+      },
+      {
+        id: 4,
+        name: '제닉스아레나PC방',
+        address: '검은들1길 9',
+        fullAddress: '충남 천안시 서북구 검은들1길 9',
+        lat: 36.8106738,
+        lng: 127.1095012,
+        naverPlaceId: '1863646043',
+        pricing: DEFAULT_PRICING,
+      },
+      {
+        id: 5,
+        name: '알파PC카페',
+        address: '검은들3길 57 201~202호',
+        fullAddress: '충남 천안시 서북구 검은들3길 57 201~202호',
+        lat: 36.8103147,
+        lng: 127.1100937,
+        naverPlaceId: '1186008371',
+        pricing: DEFAULT_PRICING,
+      },
+      {
+        id: 6,
+        name: '샹떼PC방 천안불당점',
+        address: '불당34길 2 202호',
+        fullAddress: '충남 천안시 서북구 불당34길 2 202호',
+        lat: 36.8051544,
+        lng: 127.1060042,
+        naverPlaceId: '1905446905',
+        pricing: DEFAULT_PRICING,
+      },
+      {
+        id: 7,
+        name: '플래티넘PC방',
+        address: '불당23로 73-27 2층',
+        fullAddress: '충남 천안시 서북구 불당23로 73-27 2층',
+        lat: 36.8207327,
+        lng: 127.1096171,
+        naverPlaceId: '1149883137',
+        pricing: DEFAULT_PRICING,
+      },
+      {
+        id: 8,
+        name: '아이센스리그PC 신불당점',
+        address: '불당25로 152 디엠타워 2층 204호',
+        fullAddress: '충남 천안시 서북구 불당25로 152 디엠타워 2층 204호',
+        lat: 36.8146253,
+        lng: 127.1077234,
+        naverPlaceId: '628009609',
+        naverMapLabel: 'DM타워(입점 건물)',
+        pricing: DEFAULT_PRICING,
+      },
+    ];
+
+    let map, markers = {}, activeId = null;
+
+    function getNaverMapUrl(pc) {
+      return `https://map.naver.com/p/search/place/${pc.naverPlaceId}`;
+    }
+
+    function getNaverMapLinkText(pc) {
+      return pc.naverMapLabel ? `네이버 지도 (${pc.naverMapLabel})` : '네이버 지도';
+    }
+
+    function formatPrice(n) {
+      return n.toLocaleString('ko-KR') + '원';
+    }
+
+    function renderPricingItems(packages) {
+      return packages
+        .map(p => `<li>${p.label}: <span class="price">${formatPrice(p.price)}</span></li>`)
+        .join('');
+    }
+
+    function renderPricingCard(pricing) {
+      if (!pricing?.packages?.length) return '';
+      const visible = pricing.packages.filter(p => p.price <= PRICING_VISIBLE_MAX);
+      const hidden = pricing.packages.filter(p => p.price > PRICING_VISIBLE_MAX);
+      const hasMore = hidden.length > 0;
+      return `
+        <div class="pc-card-pricing">
+          <div class="pricing-label">💰 요금</div>
+          <ul>${renderPricingItems(visible)}</ul>
+          ${hasMore ? `
+            <ul class="pricing-more-items" hidden>${renderPricingItems(hidden)}</ul>
+            <button type="button" class="pricing-more-btn" data-action="pricing-toggle">더보기</button>
+          ` : ''}
+          ${pricing.verifiedAt ? `<p class="pricing-note">확인일 ${pricing.verifiedAt} · 요금은 변동될 수 있음 · 매장 확인 후 이용</p>` : ''}
+        </div>
+      `;
+    }
+
+    function renderPricingPopup(pricing) {
+      if (!pricing?.packages?.length) return '';
+      const visible = pricing.packages.filter(p => p.price <= PRICING_VISIBLE_MAX);
+      const lines = visible
+        .map(p => `${p.label}: ${formatPrice(p.price)}`)
+        .join('<br>');
+      const hasMore = pricing.packages.some(p => p.price > PRICING_VISIBLE_MAX);
+      return `
+        <div class="popup-pricing">
+          <strong>요금</strong><br>${lines}
+          ${hasMore ? '<br><span style="color:#888;font-size:11px">3,000원 이후 요금은 목록에서 더보기</span>' : ''}
+        </div>
+      `;
+    }
+
+    function createMarkerIcon(num, isActive) {
+      return L.divIcon({
+        className: '',
+        html: `<div class="custom-marker${isActive ? ' active' : ''}">${num}</div>`,
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
+        popupAnchor: [0, -16],
+      });
+    }
+
+    function initMap() {
+      map = L.map('map', { zoomControl: true }).setView([36.8115, 127.1080], 15);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 19,
+      }).addTo(map);
+
+      PC_BANGS.forEach((pc, i) => {
+        const marker = L.marker([pc.lat, pc.lng], {
+          icon: createMarkerIcon(i + 1, false),
+        }).addTo(map);
+
+        marker.bindPopup(`
+          <div class="popup-content">
+            <h4>${pc.name}</h4>
+            <p>${pc.fullAddress}</p>
+            ${renderPricingPopup(pc.pricing)}
+            <a href="${getNaverMapUrl(pc)}" target="_blank" rel="noopener">네이버 지도에서 보기 →</a>
+          </div>
+        `);
+
+        marker.on('click', () => selectPcBang(pc.id, false));
+        markers[pc.id] = marker;
+      });
+
+      const bounds = L.latLngBounds(PC_BANGS.map(pc => [pc.lat, pc.lng]));
+      map.fitBounds(bounds.pad(0.08));
+    }
+
+    function selectPcBang(id, fromList = true) {
+      activeId = id;
+      const pc = PC_BANGS.find(p => p.id === id);
+      if (!pc) return;
+
+      document.getElementById('mapHint').textContent = pc.name;
+
+      PC_BANGS.forEach((p, i) => {
+        markers[p.id].setIcon(createMarkerIcon(i + 1, p.id === id));
+      });
+
+      map.setView([pc.lat, pc.lng], 17, { animate: true });
+      markers[id].openPopup();
+
+      document.querySelectorAll('.pc-card').forEach(card => {
+        card.classList.toggle('active', Number(card.dataset.id) === id);
+      });
+
+      if (fromList) {
+        const card = document.querySelector(`.pc-card[data-id="${id}"]`);
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function renderPcList(filter = '') {
+      const list = document.getElementById('pcList');
+      const keyword = filter.trim().toLowerCase();
+      const filtered = PC_BANGS.filter(pc =>
+        !keyword || pc.name.toLowerCase().includes(keyword) || pc.address.includes(keyword)
+      );
+
+      list.innerHTML = filtered.map((pc, i) => {
+        const idx = PC_BANGS.indexOf(pc) + 1;
+        return `
+          <div class="pc-card${activeId === pc.id ? ' active' : ''}" data-id="${pc.id}">
+            <div class="pc-card-header">
+              <div class="number">${idx}</div>
+              <h3>${pc.name}</h3>
+            </div>
+            <p class="location">📍 ${pc.fullAddress}</p>
+            ${renderPricingCard(pc.pricing)}
+            <div class="pc-card-actions">
+              <button class="btn btn-outline btn-sm" data-action="map" data-id="${pc.id}">지도에서 보기</button>
+              <a class="btn btn-outline btn-sm" href="${getNaverMapUrl(pc)}" target="_blank" rel="noopener">${getNaverMapLinkText(pc)}</a>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (filtered.length === 0) {
+        list.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:24px;">검색 결과가 없습니다.</p>';
+      }
+    }
+
+    function bindListEvents() {
+      document.getElementById('pcList').addEventListener('click', (e) => {
+        const pricingToggle = e.target.closest('[data-action="pricing-toggle"]');
+        const mapBtn = e.target.closest('[data-action="map"]');
+        const card = e.target.closest('.pc-card');
+        if (pricingToggle) {
+          e.stopPropagation();
+          const wrap = pricingToggle.closest('.pc-card-pricing');
+          const more = wrap.querySelector('.pricing-more-items');
+          const expanded = more.hasAttribute('hidden');
+          more.toggleAttribute('hidden');
+          pricingToggle.textContent = expanded ? '접기' : '더보기';
+        } else if (mapBtn) {
+          e.stopPropagation();
+          selectPcBang(Number(mapBtn.dataset.id));
+        } else if (card && !e.target.closest('a') && !e.target.closest('button')) {
+          selectPcBang(Number(card.dataset.id));
+        }
+      });
+
+      document.getElementById('searchInput').addEventListener('input', (e) => {
+        renderPcList(e.target.value);
+      });
+    }
+
+    renderPcList();
+    bindListEvents();
+    initMap();
+  </script>
+</body>
+</html>
