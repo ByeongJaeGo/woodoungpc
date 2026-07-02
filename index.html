@@ -71,16 +71,16 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --surface-hover: #222633;
-      --border: #2a2f3d;
-      --accent: #6c5ce7;
-      --accent-light: #a29bfe;
-      --text: #e8eaed;
-      --text-muted: #8b92a5;
-      --success: #00b894;
-      --danger: #ff6b6b;
+      --bg: #f4f6fa;
+      --surface: #ffffff;
+      --surface-hover: #f8f9fc;
+      --border: #dfe3eb;
+      --accent: #5b4cdb;
+      --accent-light: #6c5ce7;
+      --text: #1a1d27;
+      --text-muted: #5c6370;
+      --success: #00a884;
+      --danger: #e05555;
     }
 
     body {
@@ -125,7 +125,7 @@
     }
 
     .logo-text { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-    .logo-text span { color: var(--accent-light); }
+    .logo-text span { color: var(--accent); }
 
     .btn {
       padding: 8px 18px;
@@ -138,7 +138,7 @@
     }
 
     .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
-    .btn-outline:hover { border-color: var(--accent); color: var(--accent-light); }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
     .btn-sm { padding: 5px 12px; font-size: 12px; }
 
     .hero {
@@ -152,8 +152,8 @@
       display: inline-block;
       margin-top: 16px;
       padding: 6px 16px;
-      background: rgba(108, 92, 231, 0.15);
-      color: var(--accent-light);
+      background: rgba(91, 76, 219, 0.1);
+      color: var(--accent);
       border-radius: 20px;
       font-size: 13px;
       font-weight: 600;
@@ -200,7 +200,7 @@
     #map {
       height: 520px;
       width: 100%;
-      background: #1e2130;
+      background: #e8ecf2;
     }
 
     .list-panel {
@@ -244,7 +244,7 @@
     }
 
     .pc-card {
-      background: var(--bg);
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 14px 16px;
@@ -258,7 +258,7 @@
     .pc-card:hover,
     .pc-card.active {
       border-color: var(--accent);
-      background: rgba(108, 92, 231, 0.08);
+      background: rgba(91, 76, 219, 0.05);
     }
 
     .pc-card-header {
@@ -272,8 +272,8 @@
       flex-shrink: 0;
       width: 26px;
       height: 26px;
-      background: rgba(108, 92, 231, 0.2);
-      color: var(--accent-light);
+      background: rgba(91, 76, 219, 0.12);
+      color: var(--accent);
       border-radius: 7px;
       text-align: center;
       line-height: 26px;
@@ -336,7 +336,7 @@
       padding: 0;
       background: none;
       border: none;
-      color: var(--accent-light);
+      color: var(--accent);
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
@@ -345,7 +345,7 @@
     }
 
     .pc-card-pricing .pricing-more-btn:hover {
-      color: var(--accent);
+      color: #4a3fc9;
     }
 
     .pc-card-actions {
